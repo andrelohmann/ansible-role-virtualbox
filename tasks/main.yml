@@ -1,0 +1,54 @@
+---
+
+- name: Add vbox key
+  ansible.builtin.get_url:
+    url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
+    dest: /etc/apt/trusted.gpg.d/oracle_vbox_2016.asc
+    mode: '0644'
+    force: true
+
+- name: Add vbox repo
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/oracle_vbox_2016.asc] http://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release | lower }} contrib"
+    filename: virtualbox
+    state: present
+    update_cache: true
+
+- name: Install vbox
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: true
+    autoremove: true
+    update_cache: true
+    cache_valid_time: 3600
+  vars:
+    packages:
+      - virtualbox-7.0
+
+- name: Fetch installed vbox version
+  ansible.builtin.shell: vboxmanage -v | cut -dr -f1
+  args:
+    executable: /bin/bash
+  register: vbox_version
+
+- name: Download extension pack
+  ansible.builtin.get_url:
+    url: "https://download.virtualbox.org/virtualbox/{{ vbox_version.stdout }}/Oracle_VM_VirtualBox_Extension_Pack-{{ vbox_version.stdout }}.vbox-extpack"
+    dest: /opt/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack
+    mode: '0644'
+    force: true
+
+- name: Install extension pack
+  ansible.builtin.expect:
+    command: vboxmanage extpack install /opt/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack
+    responses:
+      Do you agree to these license terms and conditions (y/n)?: y
+
+- name: Add "ubuntu" to vboxusers group
+  ansible.builtin.shell: usermod -a -G vboxusers ubuntu
+  args:
+    executable: /bin/bash
+
+...

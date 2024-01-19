@@ -1,0 +1,21 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: Run vagrant
+    ansible.builtin.shell: which vagrant
+    register: vagrant_status
+
+  - name: Dump vagrant status
+    ansible.builtin.debug:
+      var: vagrant_status
+
+  - name: Assert vagrant exists in /usr/local/bin/vagrant
+    ansible.builtin.assert:
+      that: vagrant_status.stdout is search('/usr/local/bin/vagrant')
+
+...
