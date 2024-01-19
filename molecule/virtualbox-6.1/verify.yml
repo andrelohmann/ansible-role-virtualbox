@@ -14,8 +14,8 @@
     ansible.builtin.debug:
       var: virtualbox_status
 
-  - name: Assert virtualbox has version 7.0
+  - name: Assert virtualbox has version 6.1
     ansible.builtin.assert:
-      that: virtualbox_status.stdout is search('7.0')
+      that: virtualbox_status.stdout is search('6.1')
 
 ...

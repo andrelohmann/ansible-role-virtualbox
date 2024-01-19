@@ -25,30 +25,41 @@
     cache_valid_time: 3600
   vars:
     packages:
-      - virtualbox-7.0
+    - python3-pexpect
+    - virtualbox-{{ virtualbox_version }}
 
 - name: Fetch installed vbox version
-  ansible.builtin.shell: vboxmanage -v | cut -dr -f1
+  ansible.builtin.shell: >
+    set -o pipefail && \
+    vboxmanage -v | tail -n1 | cut -dr -f1
   args:
     executable: /bin/bash
   register: vbox_version
+  changed_when: false
 
 - name: Download extension pack
   ansible.builtin.get_url:
     url: "https://download.virtualbox.org/virtualbox/{{ vbox_version.stdout }}/Oracle_VM_VirtualBox_Extension_Pack-{{ vbox_version.stdout }}.vbox-extpack"
-    dest: /opt/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack
+    dest: /tmp/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack
     mode: '0644'
     force: true
 
 - name: Install extension pack
   ansible.builtin.expect:
-    command: vboxmanage extpack install /opt/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack
+    command: vboxmanage extpack install /tmp/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack
     responses:
       Do you agree to these license terms and conditions (y/n)?: y
+  register: command_result
+  changed_when: false
+  failed_when:
+  - command_result == 1
+  - ("Extension pack 'Oracle VM VirtualBox Extension Pack' is already installed." not in command_result.stderr)
 
-- name: Add "ubuntu" to vboxusers group
-  ansible.builtin.shell: usermod -a -G vboxusers ubuntu
-  args:
-    executable: /bin/bash
+- name: Add users to vboxusers
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: vboxusers
+    append: true
+  with_items: "{{ virtualbox_users }}"
 
 ...
