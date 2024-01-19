@@ -3,6 +3,12 @@
   become: true
   become_method: sudo
 
+  vars:
+    virtualbox_version: 6.1
+    virtualbox_users:
+    - ubuntu
+    - vagrant
+
   roles:
   - andrelohmann.root_colored_prompt
   - ansible-role-virtualbox
