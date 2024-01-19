@@ -1,0 +1,21 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: Get virtualbox version
+    ansible.builtin.shell: vboxmanage -v
+    register: virtualbox_status
+
+  - name: Dump virtualbox status
+    ansible.builtin.debug:
+      var: virtualbox_status
+
+  - name: Assert virtualbox has version 6.1
+    ansible.builtin.assert:
+      that: virtualbox_status.stdout is search('6.1')
+
+...
