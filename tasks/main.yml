@@ -52,8 +52,8 @@
   register: command_result
   changed_when: false
   failed_when:
-  - command_result == 1
-  - ("Extension pack 'Oracle VM VirtualBox Extension Pack' is already installed." not in command_result.stderr)
+  - command_result.rc == 1
+  - command_result.stdout is not search("Extension pack 'Oracle VM VirtualBox Extension Pack' is already installed.")
 
 - name: Add users to vboxusers
   ansible.builtin.user:
