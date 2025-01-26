@@ -39,21 +39,21 @@
 
 - name: Download extension pack
   ansible.builtin.get_url:
-    url: "https://download.virtualbox.org/virtualbox/{{ vbox_version.stdout }}/Oracle_VM_VirtualBox_Extension_Pack-{{ vbox_version.stdout }}.vbox-extpack"
-    dest: /tmp/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack
+    url: "https://download.virtualbox.org/virtualbox/{{ vbox_version.stdout }}/Oracle_VirtualBox_Extension_Pack-{{ vbox_version.stdout }}.vbox-extpack"
+    dest: /tmp/Oracle_VirtualBox_Extension_Pack.vbox-extpack
     mode: '0644'
     force: true
 
 - name: Install extension pack
   ansible.builtin.expect:
-    command: vboxmanage extpack install /tmp/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack
+    command: vboxmanage extpack install /tmp/Oracle_VirtualBox_Extension_Pack.vbox-extpack
     responses:
       Do you agree to these license terms and conditions (y/n)?: y
   register: command_result
   changed_when: false
   failed_when:
   - command_result.rc == 1
-  - command_result.stdout is not search("Extension pack 'Oracle VM VirtualBox Extension Pack' is already installed.")
+  - command_result.stdout is not search("Extension pack 'Oracle VirtualBox Extension Pack' is already installed.")
 
 - name: Add users to vboxusers
   ansible.builtin.user:

@@ -14,7 +14,7 @@ This role requires ubuntu
 
 Select the Virtualbox Version, you want to install and create a list with all users that need to be added to the vboxusers group
 
-    virtualbox_version: 7.0 # 6.1
+    virtualbox_version: 7.1
     virtualbox_users:
     - __USERNAME__
     - __OTHER_USERNAME__
