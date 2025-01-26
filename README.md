@@ -14,7 +14,7 @@ This role requires ubuntu
 
 Select the Virtualbox Version, you want to install and create a list with all users that need to be added to the vboxusers group
 
-    virtualbox_version: 7.0 # 6.1
+    virtualbox_version: 7.1
     virtualbox_users:
     - __USERNAME__
     - __OTHER_USERNAME__
@@ -56,7 +56,7 @@ https://thedatabaseme.de/2022/01/17/automated-testing-your-ansible-role-with-mol
 
 This ansible role is developed using molecule for testing. It's development is based on visual studio code and a regarding development container, solving all dependencies in terms of necessary tools (ansible, linter, molecule).
 
-The role will be tested on two ubuntu containers (focal, jammy).
+The role will be tested on two ubuntu containers (noble, jammy).
 
 To startup the molecule test containers from within the development container, the docker socket needs to be bind mounted into the development container.
 
