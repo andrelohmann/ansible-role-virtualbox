@@ -2,11 +2,11 @@
 - name: Converge
   hosts: all
   become: true
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   vars:
     virtualbox_version: 7.1
   tasks:
-  - name: "Include andrelohmann.virtualbox"
-    include_role:
+  - name: Include andrelohmann.virtualbox
+    ansible.builtin.include_role:
       name: "andrelohmann.virtualbox"
 ...
