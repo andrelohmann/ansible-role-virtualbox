@@ -7,8 +7,9 @@
   tasks:
 
   - name: Get virtualbox version
-    ansible.builtin.shell: vboxmanage -v
+    ansible.builtin.command: vboxmanage -v
     register: virtualbox_status
+    changed_when: false
 
   - name: Dump virtualbox status
     ansible.builtin.debug:
